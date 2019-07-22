@@ -34,10 +34,29 @@ RgbColor White(255, 255, 255);
 
 #define AUTOOFFAFTER 30 * SECS_PER_MIN
 
+#define LOGTO WEBSOCKET
+
+#if LOGTO == WEBSOCKET
 #include <WebSocketsServer.h>
 WebSocketsServer webSocket = WebSocketsServer(80);
+#endif
 
-// TODO make log function which can be configured to use Serial or websocket
+String timeToString(time_t dt) {
+    return String(year(dt)) + String("-") +
+    (month(dt) < 10 ? String("0") : String("")) + String(month(dt)) + String("-") +
+    (day(dt) < 10 ? String("0") : String("")) + String(day(dt)) + String("T") +
+    (hour(dt) < 10 ? String("0") : String("")) + String(hour(dt)) + String(":") +
+    (minute(dt) < 10 ? String("0") : String("")) + String(minute(dt)) + String(":") +
+    (second(dt) < 10 ? String("0") : String("")) + String(second(dt)) + String("Z");
+}
+
+inline void log(String msg) {
+#if LOGTO == WEBSOCKET
+  webSocket.broadcastTXT(msg);
+#endif
+  ;
+}
+
 void setup()
 {
   pinMode(SENSLED, OUTPUT);
@@ -201,7 +220,9 @@ void animateDemo(const AnimationParam& param) {
 }
 
 void Panic(String msg) {
-  /* webSocket.broadcastTXT(msg); */
+#if LOGTO == WEBSOCKET
+  webSocket.broadcastTXT(msg);
+#endif
   while(true) {
     blinkLEDs(Red, 1);
   }
@@ -248,18 +269,6 @@ void animateSunrise(const AnimationParam& param) {
     });
   }
 }
-
-/* void printDT(String prefix, time_t dt) { */
-/*   webSocket.broadcastTXT( */
-/*     prefix + */
-/*     String(year(dt)) + String("-") + */
-/*     (month(dt) < 10 ? String("0") : String("")) + String(month(dt)) + String("-") + */
-/*     (day(dt) < 10 ? String("0") : String("")) + String(day(dt)) + String("T") + */
-/*     (hour(dt) < 10 ? String("0") : String("")) + String(hour(dt)) + String(":") + */
-/*     (minute(dt) < 10 ? String("0") : String("")) + String(minute(dt)) + String(":") + */
-/*     (second(dt) < 10 ? String("0") : String("")) + String(second(dt)) + String("Z") */
-/*   ); */
-/* } */
 
 time_t parseDateTime(String dateTime, String timeZone) {
   dateTime.trim();
@@ -332,12 +341,6 @@ enum EventFrequency {
   WEEKLY,
   DAILY
 };
-
-/* String getSubRule(String key, string rRule) { */
-/*   int start = rRule.indexOf(key + "="); */
-/*   int end = rRule.indexOf(';', start+1) */
-/*   return rRule.substring(start, end); */
-/* } */
 
 time_t getNextOccurrence(time_t startTime, String rRule) {
   rRule.trim();
