@@ -101,7 +101,9 @@ void setup()
   ArduinoOTA.setPassword(otaPass);
   ArduinoOTA.begin();
 
-  /* webSocket.begin(); */
+#if LOGTO == WEBSOCKET
+  webSocket.begin();
+#endif
   /* webSocket.broadcastTXT("Message:" + String(var)); */
 
   blinkLEDs(DarkGreen, 3);
