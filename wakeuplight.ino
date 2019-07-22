@@ -232,9 +232,8 @@ void Panic(String msg) {
 #if LOGTO == WEBSOCKET
   webSocket.broadcastTXT(msg);
 #endif
-  while(true) {
-    blinkLEDs(Red, 1);
-  }
+  blinkLEDs(Red, 60);
+  ESP.reset();
 }
 
 void animateSunrise(const AnimationParam& param) {
