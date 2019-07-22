@@ -104,7 +104,6 @@ void setup()
 #if LOGTO == WEBSOCKET
   webSocket.begin();
 #endif
-  /* webSocket.broadcastTXT("Message:" + String(var)); */
 
   blinkLEDs(DarkGreen, 3);
 }
@@ -128,21 +127,29 @@ void loop() {
     sunrise.StopAnimation(0);
     strip.ClearTo(Black);
     strip.Show();
+    log("Turn off");
   }
 
   if(watch - lastCalUpdate >= 15 * SECS_PER_MIN) {
     lastCalUpdate = watch;
     nextEvent = getNextEvent();
+    log("Time is: " + timeToString(watch));
+    log("Next event at " + timeToString(nextEvent.startTime) + " for "
+        + String(nextEvent.dur) + "s");
+    log("Animation state: " + String(sunrise.IsAnimationActive(0)));
   }
 
   if(!sunrise.IsAnimationActive(0) && watch >= nextEvent.startTime) {
     int dur = nextEvent.dur - (watch - nextEvent.startTime);
+    log("Starting animation at " + timeToString(nextEvent.startTime) + " for "
+        + String(dur) + "s" + " ("  + String(nextEvent.dur) +"s)");
     sunrise.StartAnimation(0, dur, animateSunrise);
   }
 
   // Start demo
   if(!sunrise.IsAnimationActive(0) && buttonWasHeldFor(2000)) {
     sunrise.StartAnimation(0, 3, animateDemo);
+    log("Demo");
   }
 }
 
@@ -512,13 +519,13 @@ struct Sunrise getNextEvent() {
               nextEvent.dur = endTime - startTime;
             }
           }
-
         }
       }
-
     }
     https.end();
   }
+  log(String(__FUNCTION__) + ": Next event is at " + timeToString(nextEvent.startTime) + " for "
+      + String(nextEvent.dur) + "s");
   return nextEvent;
 }
 
