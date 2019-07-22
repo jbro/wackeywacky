@@ -453,7 +453,9 @@ struct Event {
 
 struct Sunrise getNextEvent() {
   struct Sunrise nextEvent;
-  nextEvent.startTime = now() + SECS_PER_WEEK;
+  time_t nowish = now();
+  nextEvent.startTime = nowish + SECS_PER_WEEK;
+  nextEvent.dur = 0;
 
   std::unique_ptr<BearSSL::WiFiClientSecure> client(new BearSSL::WiFiClientSecure);
   client->setBufferSizes(1024, 1024);
@@ -513,7 +515,7 @@ struct Sunrise getNextEvent() {
               endTime = getNextOccurrence(endTime, calevent.rRule);
             }
 
-            if(startTime >= now() - endTime && startTime < nextEvent.startTime) {
+            if(endTime >= nowish && startTime < nextEvent.startTime) {
               nextEvent.startTime = startTime;
               nextEvent.dur = endTime - startTime;
             }
