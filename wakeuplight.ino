@@ -32,7 +32,7 @@ RgbColor White(255, 255, 255);
 #define SENSLED D2
 #define SENSPTR A0
 
-#define AUTOOFFAFTER 30 * SECS_PER_MIN
+#define AUTOOFFAFTER 60 * SECS_PER_MIN
 
 #define LOGTO WEBSOCKET
 
