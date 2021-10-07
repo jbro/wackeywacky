@@ -30,11 +30,6 @@ enum LampMode {
   ANIMATE_RUN
 };
 
-enum Effects {
-  rainbow,
-  sunrise
-};
-
 struct LampState {
   enum LampMode mode;
   CRGB color;
