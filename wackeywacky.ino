@@ -92,6 +92,22 @@ void sunriseAnimation() {
   }
 }
 
+void sunriseFastAnimation() {
+  static uint8_t brightness;
+  if (lamp.mode == ANIMATE_START) {
+    lamp.frameDelayMS = 125;
+    fill_solid(lamp.leds, NUM_LEDS, CRGB(255, 128, 0));
+    brightness = 28;
+  }
+
+  if (brightness < 255) {
+    FastLED.setBrightness(gamma8[brightness++]);
+    FastLED.show();
+  } else {
+    lamp.mode = OFF;
+  }
+}
+
 void rainbowAnimation() {
   static uint8_t hue;
   if (lamp.mode == ANIMATE_START) {
@@ -139,6 +155,11 @@ void onConnectionEstablished() {
         lamp.effect = &sunriseAnimation;
         lamp.mode = ANIMATE_START;
         client.publish("bedroom/wakeuplight/effect/status", "sunrise");
+      }
+      if (payload == "sunrise_fast") {
+        lamp.effect = &sunriseFastAnimation;
+        lamp.mode = ANIMATE_START;
+        client.publish("bedroom/wakeuplight/effect/status", "sunrise_fast");
       }
   });
 
