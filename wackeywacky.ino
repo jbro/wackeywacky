@@ -88,7 +88,10 @@ void sunriseAnimation() {
     FastLED.setBrightness(gamma8[brightness++]);
     FastLED.show();
   } else {
-    lamp.mode = OFF;
+    lamp.mode = ON;
+    lamp.color = CRGB(255, 128, 0); // Sunrise orange
+    lamp.brightness = 0xFF;
+    lampShow();
   }
 }
 
@@ -104,7 +107,10 @@ void sunriseFastAnimation() {
     FastLED.setBrightness(gamma8[brightness++]);
     FastLED.show();
   } else {
-    lamp.mode = OFF;
+    lamp.mode = ON;
+    lamp.color = CRGB(255, 128, 0); // Sunrise orange
+    lamp.brightness = 0xFF;
+    lampShow();
   }
 }
 
