@@ -117,14 +117,15 @@ void sunrise()
     fill_solid(lamp.leds, NUM_LEDS, CRGB(gamma3[red], (green >= 0) ? gamma3[green] : 0, 0));
     red += 1;
     green += 1;
+    FastLED.show();
   }
   else
   {
     lamp.mode = ON;
     lamp.color = CRGB(255, 129, 0); // Sunrise orangeish
     lamp.brightness = 0xFF;
+    lampShow();
   }
-  lampShow();
 }
 
 void sunriseAnimation()
