@@ -1,0 +1,8 @@
+EspMQTTClient client(
+  "<wifi networks>",
+  "<wifi network pass>",
+  "<mqtt server ip>",
+  "<mqtt username>",
+  "<mqtt password>",
+  "<mqtt client name>"
+);
